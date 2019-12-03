@@ -7,24 +7,20 @@ trigger:
 - '*'
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-16.04'
   demands:
-  - npm
-
-variables:
-  buildConfiguration: 'Release'
+    - npm
 
 steps:
-- task: UseDotNet@2
-  displayName:  'Use .NET Core SDK 2.1.505' 
+- task: DotNetCoreInstaller@0
+  displayName: 'Use .NET Core SDK 2.1.505'
   inputs:
-    packageType: sdk
     version: 2.1.505
 
-- task:  Npm@1
-diplayName:  'Run npm install'
-inputs:
-  verbose: false
+- task: Npm@1
+  displayName: 'Run npm install'
+  inputs:
+    verbose: false
 
 - script: './node_modules/.bin/node-sass Tailspin.SpaceGame.Web/wwwroot --output Tailspin.SpaceGame.Web/wwwroot'
   displayName: 'Compile Sass assets'
@@ -57,7 +53,7 @@ inputs:
     publishWebProjects: false
     arguments: '--no-build --configuration Release --output $(Build.ArtifactStagingDirectory)/Release'
     zipAfterPublish: true
-    
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
   condition: succeeded()
